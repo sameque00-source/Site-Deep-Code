@@ -1,16 +1,16 @@
-# Plano original — subsídio ao Prompt 02/08
+# Plano original — preparação futura, sem iniciar a missão 02/08
 
 **Todas as recomendações deste arquivo são P: propostas, não conclusões sobre o Lusion.** Não foi possível calibrá-las com a referência visual atual devido ao bloqueio E03. Não iniciar a implementação completa com base em comportamentos inventados.
 
 ## O que sabemos sobre o produto
 
-Segundo o usuário, trata-se de um aplicativo desktop de programação com IA, em desenvolvimento e sem nome comercial definitivo. O checkout não contém o aplicativo (E01). Portanto não se verificaram interface, recursos, plataformas, versões, downloads, integrações, licenças, requisitos de sistema ou métricas de eficácia.
+Segundo o usuário, trata-se de um aplicativo desktop de programação com IA, em desenvolvimento e sem nome comercial definitivo. Na V2 foi esclarecido que o OpenCode Dev está em repositório separado. Portanto não se verificaram interface, recursos, plataformas, versões, downloads, integrações, licenças, requisitos de sistema ou métricas de eficácia; não cabe procurar nem modificar esse aplicativo nesta missão.
 
 Antes de escrever textos comerciais ou roteiros de demonstração, produzir uma tabela `recurso → implementação verificável → versão → evidência → apresentação permitida`. Qualquer item sem evidência deve ficar fora da apresentação factual do produto. Não disponibilizar executáveis, CTA de download ativo, data de lançamento ou recursos alegadamente implementados.
 
 ## Organização de projeto
 
-O repositório atual está sem código e comporta a documentação da pesquisa. Não há evidência de que seja exclusivamente o aplicativo. Se o aplicativo vier a ocupar este repositório, manter a pesquisa isolada e recomendar um repositório separado para o site, com CI, dependências, releases e permissões próprios. Não criar outro repositório sem necessidade/escopo definido.
+O usuário confirmou na V2 que `Site-Deep-Code` é destinado exclusivamente ao website. Isso resolve a dúvida da primeira entrega sobre eventual compartilhamento com o aplicativo. Manter esta pesquisa aqui, na branch existente; não há necessidade de recomendar ou criar outro repositório para o site.
 
 ## Arquitetura candidata
 
@@ -36,16 +36,20 @@ Carregar apenas a cena necessária à primeira experiência. Aproximar cenas seg
 
 ## Direção artística inicial
 
-Construir um universo associado à criação de software: profundidade, escala e luz que conduzam a atenção para uma demonstração verificada. O personagem original pode orientar a experiência, mas não deve encobrir texto, impedir navegação ou existir apenas como ornamento pesado.
+Construir um universo associado à criação de software: profundidade, escala e luz que conduzam a atenção para uma demonstração verificada. O astronauta original é obrigatório conforme a V2 e pode orientar a experiência, mas não deve encobrir texto, impedir navegação ou existir apenas como ornamento pesado. Seu design não dependerá da extração de um personagem da referência.
 
 Janelas e interações de demonstração devem reproduzir apenas comportamentos reais do aplicativo; quando forem ilustrações, identificá-las claramente. Não usar screenshots fictícios como evidência de produto funcional.
 
 Área de versões/downloads só poderá exibir dados verificados. Preparação estrutural futura não implica lançamento. Nome, logotipo, trilha, materiais, personagem e coreografia precisam de identidade e autoria próprias.
 
-## Prioridades recomendadas para o Prompt 02/08
+## Matriz de adaptação — dependente de observação
+
+O formato futuro será `Experiência observada | Função visual/interativa | Técnica provável (H ou confirmada) | Implementação original proposta (P) | Complexidade | Risco`. A tabela permanece sem linhas de experiências da referência, pois o acesso continua bloqueado (E09). As candidatas arquiteturais acima não devem ser convertidas em supostos achados para preenchê-la. A primeira linha só deve surgir de uma experiência realmente examinada, com ID de evidência.
+
+## Prioridades futuras, condicionadas à conclusão da missão 01/08
 
 1. **P0 — concluir o bloqueio desta missão:** aplicar a configuração de rede; examinar a referência atual, rotas e personagem; preencher evidências e timelines reais. Não declarar 01 concluída antes disso.
-2. **P0 — inventário do aplicativo:** identificar o checkout correto e executar uma versão autorizada para confirmar recursos e interface. Definir conteúdo demonstrável sem inventar capacidades.
+2. **P0 — conteúdo verificável do aplicativo:** em trabalho posterior e escopo autorizado, obter evidências da interface e recursos reais do repositório separado. Definir conteúdo demonstrável sem inventar capacidades ou procurar esse código aqui.
 3. **P1 — especificação de experiência:** sitemap próprio, roteiro por estado, direção artística e matriz de interações, incluindo silêncio, teclado, mobile e movimento reduzido. Relacionar cada decisão à função no produto.
 4. **P1 — protótipo técnico restrito:** uma cena com arte original provisória, uma transição, uma janela demonstrativa verificada e os fallbacks. Nenhum site definitivo ou deploy nesta missão.
 5. **P1 — prova de desempenho:** medir em hardware físico com 60/120 Hz e mobile representativo; comparar fidelidade, custo, tempo de carregamento e memória por tier.

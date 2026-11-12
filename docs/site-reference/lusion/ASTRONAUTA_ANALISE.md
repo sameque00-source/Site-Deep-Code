@@ -28,6 +28,6 @@ Para cada ação observada: `ID → rota/estado → evento → atraso → key po
 
 ## Direção original proposta (P)
 
-Um personagem original pode representar exploração e orientação em programação, sem copiar silhueta, traje, rig, coreografia ou áudio da referência. Sua ação principal deve explicar a navegação e conduzir a uma demonstração real do aplicativo. A escolha entre astronauta e outro personagem permanece artística, dependente da auditoria e da identidade do produto.
+Na V2, o usuário tornou um **astronauta original** requisito do nosso site, independentemente de ele ser encontrado na referência. Essa exigência é de produto, não evidência sobre o Lusion. O astronauta poderá representar exploração e orientação em programação, sem copiar silhueta, traje, rig, coreografia ou áudio da referência. Sua ação principal deve explicar a navegação e conduzir a uma demonstração real e autorizada do aplicativo. Concept, proporções, traje e coreografia permanecem decisões futuras; nenhum design foi inventado como se tivesse sido observado.
 
 Não há modelo, textura, animação ou personagem incorporado nesta missão.

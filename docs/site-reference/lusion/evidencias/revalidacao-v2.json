@@ -1,0 +1,53 @@
+{
+  "observedUTC": "2026-11-12T21:30:18Z",
+  "sourceTime": "Cabeçalho Date da resposta CONNECT; testes Git e API feitos na mesma rodada.",
+  "repository": {
+    "name": "sameque00-source/Site-Deep-Code",
+    "branch": "research/lusion-reference",
+    "localHEADAtResume": "9992c6d863409830f3e50f005e36eb31b5dda7f0",
+    "remoteResearchHEADAtResume": "9992c6d863409830f3e50f005e36eb31b5dda7f0",
+    "remoteMainHEADAtResume": "8dc42ee01c8f2df5635197cbfddb053cc3949404",
+    "workingTreeCleanAtResume": true,
+    "diffFromFirstDeliveryAtResume": false
+  },
+  "environment": {
+    "workspace": "/workspace",
+    "readableDraft": true,
+    "draftRevision": 3,
+    "draftBaseMatchesPriorSession": true,
+    "draftNetworkType": "restricted",
+    "draftCustomHosts": [
+      "api.github.com",
+      "lusion.co"
+    ],
+    "existingPresetPreserved": "package_managers",
+    "runtimePolicyVersion": "not available",
+    "publicationConfirmed": false,
+    "publicationToolAvailable": false,
+    "newTaskAfterPublicationConfirmed": false
+  },
+  "connectivity": {
+    "gitRead": {
+      "operation": "git ls-remote --symref origin HEAD refs/heads/main refs/heads/research/lusion-reference",
+      "ok": true
+    },
+    "referenceHTTPS": {
+      "operation": "curl -I -L --max-time 25 https://lusion.co/",
+      "proxyCONNECTStatus": 403,
+      "curlExit": 56,
+      "originReached": false
+    },
+    "githubAPI": {
+      "operation": "gh api repos/sameque00-source/Site-Deep-Code --jq {default_branch,permissions}",
+      "exit": 1,
+      "error": "Forbidden"
+    }
+  },
+  "referenceInspected": false,
+  "notes": [
+    "Rascunho não representa política efetiva de runtime.",
+    "Nenhum retry do Chromium no alvo foi feito nesta retomada, pois o CONNECT já confirmou a restrição persistente.",
+    "Nenhum domínio adicional foi descoberto: nenhum HTML da referência chegou ao navegador.",
+    "Nenhuma configuração foi regravada: requisitos necessários já constam do rascunho existente."
+  ]
+}

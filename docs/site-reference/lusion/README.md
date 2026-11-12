@@ -2,9 +2,17 @@
 
 **Estado: auditoria bloqueada por acesso de rede; não concluída.**
 
+## Retomada V2 — 12/11/2026, 18h30 (Brasília)
+
+**MISSÃO 01/08 BLOQUEADA.** A retomada preservou o commit `9992c6d863409830f3e50f005e36eb31b5dda7f0`; branch local e remota coincidiam e a árvore estava limpa. O rascunho contém os dois domínios solicitados, mas o CONNECT ao Lusion e a API do GitHub continuam recusados em runtime. Não há confirmação de publicação nem ferramenta de publicação disponível. Nenhuma página da referência foi examinada nesta retomada; os registros anteriores permanecem válidos como histórico.
+
+A V2 confirmou que este repositório é exclusivo do site e separado do OpenCode Dev. Não foi procurado código do aplicativo. O astronauta **original** é agora requisito explícito do produto, independentemente de sua presença ainda não verificada na referência.
+
+O coletor recebeu diagnósticos de hosts/etapas, ID de teste, contagem sanitizada de console e espera opcional por seletor visível. Três verificações funcionais em fixture própria, inteiramente local, passaram: coleta com interação e quadros, falha de navegação e falha de ação. Isso valida o instrumento nesses cenários; não valida o Lusion nem sua performance. Evidências E08–E10 e quadro de cobertura estão no [registro de continuação](PENDENCIAS_E_EVIDENCIAS.md#retomada-v2).
+
 Sessão de 12/11/2026, iniciada aproximadamente às 18h15, horário de Brasília. Referência solicitada: <https://lusion.co/>. Nenhuma página da referência foi carregada com sucesso. Este conjunto registra evidências reais da tentativa, prepara a continuação e propõe critérios para uma futura implementação original. Não equivale à engenharia reversa visual solicitada.
 
-## Resultado verificável
+## Resultado verificável da primeira entrega
 
 - Repositório: `sameque00-source/Site-Deep-Code`; origem GitHub verificada; leitura Git funcional.
 - Estado inicial: branch `work`, HEAD `8dc42ee01c8f2df5635197cbfddb053cc3949404`, igual à `main` remota. Árvore limpa, nenhum arquivo versionado ou arquivo de projeto presente. Histórico: criação e remoção de um TXT de teste. Não há código de aplicativo desktop para examinar nem preservar neste checkout.

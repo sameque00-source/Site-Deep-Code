@@ -88,3 +88,66 @@ Não registrar cliques em links de envio, formulários ou ações externas. Para
 ## Critérios que permanecem abertos
 
 Nenhuma página principal examinada; astronauta não localizado; áudio não ouvido; transições não capturadas; métricas da referência inexistentes. Documentação organizada, proteção do repositório e ausência de incorporação de ativos estão atendidas. A missão 01/08 **não está concluída**.
+
+## Retomada V2
+
+Verificações iniciadas em 12/11/2026 às 18h30, horário de Brasília. Esta seção acrescenta fatos ao histórico E01–E07, sem apagar ou reinterpretar as tentativas anteriores.
+
+| ID | Nova evidência | Resultado e limite |
+| --- | --- | --- |
+| E08 | [Revalidação V2](evidencias/revalidacao-v2.json), estado Git e leitura do rascunho | Local/remoto da pesquisa em `9992c6d…`; `main` em `8dc42ee…`; árvore inicialmente limpa, diff nulo contra a primeira entrega. Draft revisão 3, mesmos domínios e mesma base declarada da leitura anterior. Isso não informa versão efetiva da máquina. |
+| E09 | [CONNECT/API na retomada](evidencias/revalidacao-v2.json) | Um novo teste HTTPS ao Lusion: CONNECT 403, curl 56, origem não alcançada. Um teste API: `Forbidden`, saída 1. Git read funciona. Sem retries de navegador ou liberação de domínios especulativos. |
+| E10 | [Validação funcional do coletor V2](evidencias/validacao-coletor-v2.json) | Três casos locais passaram: coleta completa com oito quadros de clique; navegação abortada com saída 3; ação inválida com saída 4 e etapa preservada. Não são páginas, transições ou medições do Lusion. |
+
+### Ambiente e publicação
+
+O executor disponível continua operando em `/workspace`, com o checkout existente em `/workspace/Site-Deep-Code`. Nenhum evento de provisionamento/publicação foi confirmado nesta retomada. Não há ferramenta `environment_status` nem de publicação de ambiente exposta; as ferramentas disponíveis permitem ler e atualizar o **rascunho**, que não atesta a política em execução. Não se pode concluir que a tarefa foi iniciada após publicação apenas pela presença dos domínios no draft.
+
+Nenhuma alteração duplicada de configuração foi salva: a rede restrita já contém `lusion.co` e `api.github.com`, preservando o preset `package_managers`. A referência continua inacessível na máquina atual. Não se inferiu expiração de token, falha do servidor Lusion ou ausência de permissão de escrita Git a partir desses erros.
+
+**Ação do proprietário:** abrir as configurações deste ambiente no Codex Cloud, conferir os dois domínios, revisar/salvar as mudanças e publicar o ambiente. A ferramenta da primeira sessão retornou `requires_publish: true`; esta sessão não dispõe de ação que execute essa publicação. Não solicitar nem colar tokens no chat.
+
+Depois da publicação, tentar a retomada com a versão publicada. O produto pode restaurar/reconectar o ambiente de onboarding. **Se esta tarefa continuar ligada à política antiga**, iniciar uma nova tarefa selecionando o ambiente publicado é necessário para usar uma instância atualizada. Não há evidência de que uma nova tarefa seja sempre obrigatória nem garantia de que o draft já tenha sido aplicado; a confirmação será um CONNECT/navegação reais bem-sucedidos. Na nova instância, recuperar `research/lusion-reference` antes de editar e preservar alterações locais se houver.
+
+Nenhum outro host do Lusion foi descoberto: sem HTML e requests de recursos não há evidência para ampliar a lista. Não foram usados túneis, desativação de TLS ou outros caminhos para contornar a política.
+
+### Quadro de cobertura V2
+
+| Área | Estado anterior | Estado atual | Evidências | Pendências |
+| --- | --- | --- | --- | --- |
+| Acesso HTTPS | Bloqueado | Continua bloqueado no proxy | E02/E03 → E09 | Aplicar/publicar a configuração e testar runtime |
+| Git / API | Git funcional; API bloqueada | Leitura Git funcional; API continua bloqueada | E06 → E08/E09 | PR quando API estiver acessível |
+| Páginas | Nenhuma analisada | Nenhuma analisada | E09 | Descobrir home, navegação, projetos e Labs se houver links públicos |
+| Astronauta | Não localizado | Presença no Lusion NT; astronauta original obrigatório por instrução V2 | E09 + requisito do usuário | Investigação real após acesso |
+| Áudio | NT | NT; nenhum efeito ouvido ou inferido como confirmado | E09 | Playback/controles/eventos e saída verificável |
+| 3D | Não analisado | Não analisado | E09 | Cenas, câmera, materiais e evidência de renderização |
+| Animações | Sem timelines observadas | Sem timelines observadas | E09 | Captura temporal de estados reais |
+| Interações | NT | NT na referência; coletor testado em fixture própria | E10 | Alvos e eventos reais |
+| FPS | Não medido | Não medido no Lusion | E09/E10 | Não confundir teste do instrumento com benchmark do alvo |
+| Mobile | Não analisado | Não analisado | E09 | Desktop/tablet/mobile, teclado, reduced motion e toque |
+| Segurança do repositório | Branch isolada | Histórico e evidências preservados | E08 | Continuar sem merge/deploy |
+
+### Melhorias incrementais do coletor
+
+Necessidade demonstrada pelo código anterior: faltavam hosts solicitados/falhos resumidos, identificação de teste e etapa de interrupção. A espera fixa de 1500 ms também não podia representar readiness de uma cena.
+
+- `TEST_ID` vincula a execução a um caso (letras, números, `_` e `-`, até 80 caracteres); é opcional.
+- `READY_SELECTOR` espera um seletor visível previamente observado. Seu sucesso **não prova cena 3D pronta**: `sceneVisuallyVerified` permanece `false` até avaliação externa. Sem esse parâmetro, a espera fixa continua explicitamente identificada.
+- `networkSummary` registra hosts realmente solicitados, falhos e com status HTTP ≥400. Falha de host não implica bloqueio administrativo; validar erro/política antes de pedir liberação.
+- Etapas e metadados de responses/falhas têm timestamps monotônicos relativos à execução. Não são timestamps exatos de dispatch de input nem de onset visual.
+- Mensagens de console são contadas por tipo sem salvar texto; erros de coleta preservam etapa e categoria, omitindo mensagem/stack potencialmente sensíveis.
+- Saídas: 0 para coleta completa, 3 para navegação malsucedida e 4 para falha posterior/inicialização instrumentada. Erros de argumentos fora da sessão mantêm tratamento de erro próprio. O resumo diferencia `navigationOK` de `collectionOK`.
+
+Exemplo após identificar um seletor de readiness real:
+
+```sh
+TEST_ID=HOME_D01 READY_SELECTOR='SELETOR_OBSERVADO_NA_INSPECAO' node docs/site-reference/lusion/tools/capturar.cjs https://lusion.co/ /tmp/lusion-audit/home-d01 1440 900
+```
+
+O seletor acima é marcador, não um seletor conhecido do Lusion. Não executar assumindo que exista.
+
+A validação E10 usou Chromium real com requests interceptados e respondidos por HTML próprio em um domínio `.invalid`, sem contato externo. Conferiu espera de seletor, ação, quadros, amostra rAF, classificação de hosts, erros de coleta e omissão de textos/queries sintéticos. Capturas e fixtures permanecem em `/tmp/lusion-v2/`; apenas o resumo sanitizado foi versionado. Esses testes não removem a necessidade de validar o coletor contra cenas reais nem corrigem sua limitação de começar quadros após o comando de interação.
+
+### Decisão de continuidade
+
+**MISSÃO 01/08 BLOQUEADA.** Não iniciar 02/08. A implementação original futura continua condicionada à auditoria efetiva. Não houve instalação redundante, busca pelo aplicativo separado, extração de assets, tentativa de publicação do site ou deploy. A pesquisa opcional de REA não foi iniciada: não resolveria o bloqueio de acesso e não há necessidade comprovada de outra ferramenta.
