@@ -1,0 +1,51 @@
+{
+  "dateUTC": "2026-11-12T22:38:31.195Z",
+  "referenceInspected": false,
+  "tests": [
+    {
+      "test": "success",
+      "scope": "fixture local interceptada pelo Playwright, sem requests externos",
+      "exit": 0,
+      "expected": 0,
+      "passed": true
+    },
+    {
+      "test": "blocked",
+      "scope": "fixture local interceptada pelo Playwright, sem requests externos",
+      "exit": 3,
+      "expected": 3,
+      "passed": true
+    },
+    {
+      "test": "action-error",
+      "scope": "fixture local interceptada pelo Playwright, sem requests externos",
+      "exit": 4,
+      "expected": 4,
+      "passed": true
+    },
+    {
+      "test": "reject-direct-checkout-output-before-mkdir",
+      "passed": true,
+      "exit": 1
+    },
+    {
+      "test": "reject-symlink-checkout-output-before-mkdir",
+      "passed": true,
+      "exit": 1
+    },
+    {
+      "test": "copied-helper-explicit-repo-and-external-playwright-and-chromium",
+      "passed": true,
+      "exit": 0
+    },
+    {
+      "test": "reject-declared-repository-mismatch",
+      "passed": true,
+      "exit": 1
+    }
+  ],
+  "note": "Verificações do instrumento com fixtures próprias; nenhuma chamada ao Lusion. Código Windows/macOS não executado nesses sistemas.",
+  "windowsPhysicalTest": false,
+  "headedTest": false,
+  "cdpAttachmentImplemented": false
+}

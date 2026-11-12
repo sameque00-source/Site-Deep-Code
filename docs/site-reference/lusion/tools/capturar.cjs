@@ -2,7 +2,8 @@
 // Uso e limitações: ../PENDENCIAS_E_EVIDENCIAS.md
 const fs = require('node:fs');
 const path = require('node:path');
-const { chromium } = require('playwright');
+const { execFileSync } = require('node:child_process');
+const { createRequire } = require('node:module');
 
 const [target, output, width = '1440', height = '900', actionFile] = process.argv.slice(2);
 if (!target || !output) {
@@ -18,6 +19,59 @@ function cleanURL(value) {
   } catch { return '[URL inválida]'; }
 }
 
+function within(root, candidate) {
+  const relative = path.relative(root, candidate);
+  return relative === '' || (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative));
+}
+
+// Resolve também ancestrais com symlinks antes de criar diretórios de saída.
+function prospectiveRealPath(candidate) {
+  const missing = [];
+  let existing = candidate;
+  while (!fs.existsSync(existing)) {
+    missing.unshift(path.basename(existing));
+    const parent = path.dirname(existing);
+    if (parent === existing) throw new Error('Não foi possível resolver a saída.');
+    existing = parent;
+  }
+  return path.join(fs.realpathSync(existing), ...missing);
+}
+
+function playwright() {
+  if (!process.env.AUDIT_TOOLS_DIR) return require('playwright');
+  const tools = fs.realpathSync(process.env.AUDIT_TOOLS_DIR);
+  return createRequire(path.join(tools, 'package.json'))('playwright');
+}
+
+function browserExecutable() {
+  if (process.env.CHROMIUM_PATH) {
+    const executablePath = fs.realpathSync(process.env.CHROMIUM_PATH);
+    if (!fs.statSync(executablePath).isFile()) throw new Error('CHROMIUM_PATH não é arquivo.');
+    return { executablePath };
+  }
+  if (process.platform === 'win32' || process.platform === 'darwin') return { channel: 'chrome' };
+  if (fs.existsSync('/usr/bin/chromium')) return { executablePath: '/usr/bin/chromium' };
+  return {}; // Chromium gerenciado pelo Playwright, quando instalado.
+}
+
+function gitRoot(directory) {
+  return fs.realpathSync(execFileSync('git', ['-C', directory, 'rev-parse', '--show-toplevel'],
+    { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim());
+}
+
+function protectedRepoRoot() {
+  let scriptRoot;
+  try { scriptRoot = gitRoot(__dirname); } catch { /* Cópia externa pode declarar seu checkout. */ }
+  if (!process.env.AUDIT_REPO_ROOT) {
+    if (!scriptRoot) throw new Error('Execute no checkout ou declare AUDIT_REPO_ROOT.');
+    return scriptRoot;
+  }
+  const declaredRoot = gitRoot(process.env.AUDIT_REPO_ROOT);
+  if (scriptRoot && path.relative(scriptRoot, declaredRoot) !== '')
+    throw new Error('AUDIT_REPO_ROOT difere do checkout que contém o coletor.');
+  return declaredRoot;
+}
+
 async function main() {
   const url = new URL(target);
   if (url.protocol !== 'https:' || url.username || url.password)
@@ -25,18 +79,19 @@ async function main() {
   const viewport = { width: Number(width), height: Number(height) };
   if (!Object.values(viewport).every(n => Number.isInteger(n) && n >= 240 && n <= 3840))
     throw new Error('Dimensões devem ser inteiros entre 240 e 3840 CSS px.');
-  const repo = fs.realpathSync(path.resolve(__dirname, '../../../..'));
+  const repo = protectedRepoRoot();
   const out = path.resolve(output);
-  fs.mkdirSync(path.dirname(out), { recursive: true });
-  const parent = fs.realpathSync(path.dirname(out));
-  if (parent === repo || parent.startsWith(repo + path.sep))
+  if (within(repo, prospectiveRealPath(out)))
     throw new Error('Capturas devem ficar FORA do repositório.');
+  fs.mkdirSync(path.dirname(out), { recursive: true });
+  if (within(repo, fs.realpathSync(path.dirname(out)))) throw new Error('Saída resolve para dentro do repositório.');
   fs.mkdirSync(out, { mode: 0o700 }); // Não sobrescreve uma sessão anterior.
   const write = (name, data) => fs.writeFileSync(path.join(out, name), JSON.stringify(data, null, 2) + '\n');
   const action = actionFile ? JSON.parse(fs.readFileSync(actionFile, 'utf8')) : null;
   if (action && !['hover', 'click', 'focus', 'press', 'wheel', 'move', 'tap'].includes(action.type))
     throw new Error('Tipo de ação não suportado.');
   const mobile = process.env.PROFILE === 'mobile';
+  const headed = process.env.AUDIT_HEADED === '1';
   const proxyRaw = process.env.HTTPS_PROXY || process.env.https_proxy;
   const p = proxyRaw ? new URL(proxyRaw) : null;
   const sessionStart = performance.now();
@@ -45,9 +100,11 @@ async function main() {
   const readySelector = process.env.READY_SELECTOR || null;
   const requestedHosts = new Set();
   const report = {
-    schemaVersion: 2, testID,
+    schemaVersion: 3, testID,
     startedUTC: new Date().toISOString(), target: cleanURL(target), viewport,
-    profile: mobile ? 'Chromium com emulação mobile/touch' : 'desktop headless',
+    profile: mobile ? `Chromium com emulação mobile/touch (${headed ? 'headed' : 'headless'})` : `desktop ${headed ? 'headed' : 'headless'}`,
+    instrument: { platform: process.platform, externalToolsDirectory: !!process.env.AUDIT_TOOLS_DIR,
+      browserOwnership: 'launched-by-collector', cdpAttachment: false },
     reducedMotion: process.env.REDUCED_MOTION === 'reduce' ? 'reduce' : 'no-preference',
     navigation: null, requestsFailed: [], responses: [], consoleErrors: [],
     consoleCounts: {}, phases: [],
@@ -63,10 +120,13 @@ async function main() {
   };
   let browser;
   try {
+    mark('dependency-loading');
+    const { chromium } = playwright();
     mark('browser-launch');
     browser = await chromium.launch({
-      executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true,
-      args: ['--no-sandbox'],
+      ...browserExecutable(), headless: !headed,
+      // Preserva o modo Linux atual; usa sandbox no Chrome local Windows/macOS.
+      chromiumSandbox: process.platform !== 'linux',
       ...(p ? { proxy: { server: p.origin,
         ...(p.username ? { username: decodeURIComponent(p.username), password: decodeURIComponent(p.password) } : {}) } } : {})
     });
