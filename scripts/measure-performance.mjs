@@ -24,7 +24,7 @@ await cdp.send('Performance.enable');
 let revision = 'unavailable';
 try { revision = execFileSync('git', ['rev-parse', '--short', 'HEAD'], { encoding: 'utf8' }).trim(); } catch { /* Export sem Git. */ }
 const report = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   dateUTC: new Date().toISOString(),
   revision,
   target: baseURL,
@@ -48,11 +48,6 @@ const report = {
   ],
 };
 
-const diagnostic = () => page.evaluate(() => {
-  const value = window.__deepCodeExperience;
-  return value ? JSON.parse(JSON.stringify(value)) : null;
-});
-
 function summarize(intervals) {
   const sorted = [...intervals].sort((a, b) => a - b);
   const percentile = p => sorted[Math.floor((sorted.length - 1) * p)] ?? null;
@@ -70,7 +65,6 @@ function summarize(intervals) {
 }
 
 async function sample(id, purpose, action, duration = sampleMs) {
-  const before = await diagnostic();
   const cpuBefore = (await cdp.send('Performance.getMetrics')).metrics;
   const started = Date.now();
   const capture = page.evaluate(milliseconds => new Promise(resolve => {
@@ -78,6 +72,8 @@ async function sample(id, purpose, action, duration = sampleMs) {
     const longTasks = [];
     let previous = null;
     const begin = performance.now();
+    const snapshot = () => window.__deepCodeExperience ? JSON.parse(JSON.stringify(window.__deepCodeExperience)) : null;
+    const sceneBefore = snapshot();
     let observer;
     try {
       observer = new PerformanceObserver(list => {
@@ -91,23 +87,34 @@ async function sample(id, purpose, action, duration = sampleMs) {
       if (now - begin < milliseconds) requestAnimationFrame(step);
       else {
         observer?.disconnect();
-        resolve({ elapsedMs: now - begin, intervals: times, longTasks,
+        resolve({ elapsedMs: now - begin, intervals: times, longTasks, sceneBefore, sceneAfter: snapshot(),
           heapAfter: performance.memory?.usedJSHeapSize ?? null });
       }
     };
     requestAnimationFrame(step);
   }), duration);
   let actionError = null;
-  try { if (action) await action(duration); } catch (error) { actionError = String(error.message).slice(0, 400); }
+  const actionStarted = Date.now();
+  let actionFinished = actionStarted;
+  const actionPromise = action ? action(duration)
+    .catch(error => { actionError = String(error.message).slice(0, 400); })
+    .finally(() => { actionFinished = Date.now(); }) : Promise.resolve();
   const captured = await capture;
-  const after = await diagnostic();
   const cpuAfter = (await cdp.send('Performance.getMetrics')).metrics;
+  const cpuWindowMs = Date.now() - started;
+  await actionPromise;
+  const actionDurationMs = actionFinished - actionStarted;
+  const before = captured.sceneBefore;
+  const after = captured.sceneAfter;
   const metric = (list, name) => list.find(entry => entry.name === name)?.value ?? null;
   const taskBefore = metric(cpuBefore, 'TaskDuration');
   const taskAfter = metric(cpuAfter, 'TaskDuration');
   report.scenarios.push({
     id, purpose, startedUTC: new Date(started).toISOString(),
     durationMs: captured.elapsedMs,
+    actionDurationMs, actionExceededSampleWindow: actionDurationMs > captured.elapsedMs,
+    cpuMetricEnclosingWindowMs: cpuWindowMs,
+    cpuWindowNote: 'CDP snapshots enclose the rAF window with protocol overhead; not an exact GPU/frame timer.',
     viewport: page.viewportSize(),
     dpr: await page.evaluate(() => devicePixelRatio),
     raf: summarize(captured.intervals),
@@ -117,13 +124,14 @@ async function sample(id, purpose, action, duration = sampleMs) {
     cdpJSHeapBefore: metric(cpuBefore, 'JSHeapUsedSize'),
     cdpJSHeapAfter: metric(cpuAfter, 'JSHeapUsedSize'),
     sceneFramesRendered: before && after ? after.frames - before.frames : null,
-    before, after, actionError,
+    before, after, actionError, valid: actionError === null,
   });
+  if (actionError) process.exitCode = 1;
 }
 
 async function returnToHero() {
   await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
-  await page.waitForFunction(() => window.__deepCodeExperience?.active !== false);
+  await page.waitForFunction(() => scrollY < 30 && window.__deepCodeExperience?.active === true);
 }
 
 try {

@@ -285,7 +285,11 @@ export default function SpaceExperience(props: SpaceExperienceProps) {
     function contextLost(event: Event) { event.preventDefault(); failExperience() }
     const resizeObserver = new ResizeObserver(resize)
     resizeObserver.observe(host)
-    const visibilityObserver = new IntersectionObserver(entries => { inView = entries[0]?.isIntersecting ?? true; refresh() }, { rootMargin: '80px' })
+    const visibilityObserver = new IntersectionObserver(entries => {
+      // Saída e reentrada podem vir no mesmo lote; o último registro é o estado atual.
+      for (const entry of entries) if (entry.target === host) inView = entry.isIntersecting
+      refresh()
+    }, { rootMargin: '80px' })
     visibilityObserver.observe(host)
     window.addEventListener('pointermove', move, { passive: true })
     window.addEventListener('pointerout', leave)

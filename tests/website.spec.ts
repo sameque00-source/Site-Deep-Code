@@ -158,3 +158,19 @@ test('demonstração conceitual troca perspectivas por clique e teclado e pode r
   await expect(tabInterface).toHaveAttribute('aria-selected', 'true');
   await expect(panel).toContainText('Orbit.tsx');
 });
+
+test('rolagem rápida com saída e reentrada retoma o loop da cena', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.goto('/');
+  await page.waitForFunction(() => window.__deepCodeExperience?.status === 'ready');
+  for (let index = 0; index < 5; index++) {
+    await page.evaluate(() => {
+      document.querySelector('#demonstracao')?.scrollIntoView({ behavior: 'instant' });
+      scrollTo({ top: 0, behavior: 'instant' });
+    });
+    await page.waitForTimeout(90);
+  }
+  await page.waitForFunction(() => window.__deepCodeExperience?.active === true);
+  const frames = await page.evaluate(() => window.__deepCodeExperience!.frames);
+  await page.waitForFunction(previous => window.__deepCodeExperience!.frames > previous + 2, frames);
+});
