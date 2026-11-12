@@ -1,0 +1,197 @@
+{
+  "dateUTC": "2026-11-12T22:39:29.253348+00:00",
+  "scope": "REA CLI tool validation on own local fixture; NOT Lusion investigation and NOT Windows verification",
+  "referenceInspected": false,
+  "provenance": {
+    "repository": "https://github.com/morluto/rea",
+    "commit": "a8527d43b8439476f5c9d1497315dfe7dd5e1f38",
+    "package": "rea-agents",
+    "version": "6.9.0",
+    "license": "MIT",
+    "nodeEngines": "^22.23.4 || ^24.22.1 || >=26.12.1",
+    "npmIntegrity": "sha512-KqDn1UR5BMqHoQ3MGAnPuWiSKwgdFaz1L/uUNgrKt+1W8kPtgYP8AWEOXIF1lDIOBVyPuYIIst2iamo1Wf3r8g==",
+    "lockMatchesRegistryIntegrity": true,
+    "sources": [
+      "https://github.com/morluto/rea/blob/a8527d43b8439476f5c9d1497315dfe7dd5e1f38/package.json",
+      "https://github.com/morluto/rea/blob/a8527d43b8439476f5c9d1497315dfe7dd5e1f38/LICENSE",
+      "https://github.com/morluto/rea/blob/a8527d43b8439476f5c9d1497315dfe7dd5e1f38/README.md",
+      "https://github.com/morluto/rea/blob/a8527d43b8439476f5c9d1497315dfe7dd5e1f38/docs/getting-started/installation.md",
+      "https://github.com/morluto/rea/blob/a8527d43b8439476f5c9d1497315dfe7dd5e1f38/docs/getting-started/cli.md",
+      "https://github.com/morluto/rea/blob/a8527d43b8439476f5c9d1497315dfe7dd5e1f38/docs/guides/web/browser-observation.md",
+      "https://github.com/morluto/rea/blob/a8527d43b8439476f5c9d1497315dfe7dd5e1f38/scripts/rea.mjs",
+      "https://github.com/morluto/rea/blob/a8527d43b8439476f5c9d1497315dfe7dd5e1f38/scripts/prepare.mjs",
+      "https://github.com/morluto/rea/blob/a8527d43b8439476f5c9d1497315dfe7dd5e1f38/src/cli/setupCommands.ts",
+      "https://github.com/morluto/rea/blob/a8527d43b8439476f5c9d1497315dfe7dd5e1f38/src/application/Setup.ts"
+    ]
+  },
+  "installation": {
+    "isolatedDirectory": "/tmp/lusion-rea-runtime",
+    "entryScript": "/tmp/lusion-rea-runtime/node_modules/rea-agents/scripts/rea.mjs",
+    "cache": "/tmp/lusion-rea-inspection/npm-cache",
+    "command": "npm --cache /tmp/lusion-rea-inspection/npm-cache --prefix /tmp/lusion-rea-runtime install --ignore-scripts --omit=optional --no-audit --no-fund --save-exact rea-agents@6.9.0",
+    "exit": 0,
+    "packageCountAdded": 1,
+    "npmVersion": "11.9.0",
+    "nodeVersion": "24.22.1",
+    "packageUnpackedBytes": 189641205,
+    "scriptsExecuted": false,
+    "setupExecuted": false,
+    "globalInstall": false,
+    "mcpConfigured": false,
+    "optionalFridaOmitted": true,
+    "tlsVerificationDisabled": false,
+    "integrityVerificationDisabled": false
+  },
+  "runtime": {
+    "browser": "Chromium 156.0.8078.79 headless",
+    "browserProfile": "isolated temporary owned profile",
+    "cdpEndpoint": "http://127.0.0.1:9222",
+    "boundAddressVerified": "127.0.0.1 only; /proc/net/tcp LISTEN 0100007F:2406",
+    "fixture": "Own HTML via HTTP server bound to 127.0.0.1, dynamic local port",
+    "personalBrowserAttached": false,
+    "thirdPartyContentCaptured": false
+  },
+  "commands": [
+    {
+      "command": "--version",
+      "exit": 0,
+      "result": "6.9.0"
+    },
+    {
+      "command": "list-browser-targets --help",
+      "exit": 0
+    },
+    {
+      "command": "inspect-web-page --help",
+      "exit": 0
+    },
+    {
+      "command": "observe-web-session --help",
+      "exit": 0
+    },
+    {
+      "command": "capture-web-screenshot --help",
+      "exit": 0
+    },
+    {
+      "command": "list-browser-targets http://127.0.0.1:9222 --format json",
+      "exit": 0,
+      "result": "One matching own fixture page; non-page targets excluded"
+    },
+    {
+      "command": "inspect-web-page http://127.0.0.1:9222 TARGET_ID --observation-ms 500 --format json",
+      "exit": 0,
+      "evidence_id": "ev_5c8c2f92f309efc798eb46c6ec6fc4ad35e48260bd146ff242d3a6e5c26a5c3c",
+      "predicate_type": "rea.web-page-inspection",
+      "normalized_keys": [
+        "browser",
+        "target",
+        "capture_window",
+        "completeness",
+        "frames",
+        "dom",
+        "accessibility",
+        "scripts",
+        "resources",
+        "network",
+        "console",
+        "workers",
+        "metadata",
+        "storage",
+        "limitations"
+      ]
+    },
+    {
+      "command": "analyze-web-bundle http://127.0.0.1:9222 TARGET_ID --format json",
+      "exit": 0,
+      "evidence_id": "ev_51aee68f6f79a6127badc509f70cb6474dd12784fa70b31e009e6530b2e0fcd1",
+      "predicate_type": "rea.web-bundle-analysis",
+      "normalized_keys": [
+        "route_inventory",
+        "capture",
+        "observations",
+        "inferences",
+        "unknowns",
+        "completeness",
+        "limitations"
+      ]
+    },
+    {
+      "command": "capture-web-screenshot http://127.0.0.1:9222 TARGET_ID --format json",
+      "exit": 0,
+      "evidence_id": "ev_b8660cc4829fa2d01ee6b79b892347ada8e4b83ef143bf4494e16d327ab47bdb",
+      "predicate_type": "rea.web-screenshot",
+      "normalized_keys": [
+        "browser",
+        "target",
+        "captured_at",
+        "viewport",
+        "artifact",
+        "completeness",
+        "limitations"
+      ]
+    },
+    {
+      "command": "observe-web-session http://127.0.0.1:9222 TARGET_ID --observation-ms 4000 --format json",
+      "exit": 0,
+      "evidence_id": "ev_5aaa8c8328032ecfd6d10e2dff0e14367f15c371c7deb64f98a4f805a579502e",
+      "predicate_type": "rea.web-observation-session",
+      "normalized_keys": [
+        "browser",
+        "target",
+        "window",
+        "timeline",
+        "completeness",
+        "limitations"
+      ]
+    },
+    {
+      "command": "capture-browser-scenario --help",
+      "exit": 0,
+      "execution": "help only; scenario execution not tested"
+    }
+  ],
+  "observation": {
+    "requestedMilliseconds": 4000,
+    "endReason": "window_elapsed",
+    "events": [
+      {
+        "type": "same_document_navigation",
+        "timestamp": null
+      }
+    ],
+    "note": "same-document navigation was generated externally by own Playwright fixture. REA did not drive user input. Event timestamp null in returned evidence; do not infer exact event timing."
+  },
+  "limitations": [
+    "No Windows or local-user PC access was available; Linux only.",
+    "Setup safety inspection limited to relevant public scripts/documentation; not a complete security audit of all REA code/dependencies.",
+    "REA CLI operational for tested CDP fixture surfaces, not proof of Lusion connectivity or visual/3D/audio analysis.",
+    "No global MCP integration or setup was needed for the CLI.",
+    "REA observed attach-limited metadata; no completeness of activity before attachment.",
+    "No screenshot/audio/bundle of third-party target was published.",
+    "Passive CDP surfaces tested. REA also exposes capture-browser-scenario Playwright automation: confirmed by help only, not executed in this task."
+  ],
+  "semanticValidation": {
+    "matchingOwnedTarget": true,
+    "domTotalNodes": 14,
+    "expectedDOMTagsFound": [
+      "H1",
+      "BUTTON",
+      "CANVAS",
+      "SCRIPT"
+    ],
+    "scriptsObserved": 1,
+    "bundleParsedScripts": 1,
+    "bundleParseFailures": 0,
+    "screenshotPNGValidated": true,
+    "screenshotBytes": 10402,
+    "screenshotSize": [
+      1280,
+      720
+    ],
+    "screenshotDigestMatches": true,
+    "navigationEventObserved": "same_document_navigation",
+    "inspectionCoverage": "policy_filtered",
+    "inspectionLimitations": "Default capture intentionally excludes source/text/storage; attach-limited events and one unattributed script exclusion reported. Not complete capture of all runtime history."
+  }
+}

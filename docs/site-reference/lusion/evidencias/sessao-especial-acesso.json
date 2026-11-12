@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 2,
+  "testID": "ESPECIAL_ACESSO_01",
+  "startedUTC": "2026-11-12T22:35:55.961Z",
+  "target": "https://lusion.co/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "profile": "desktop headless",
+  "reducedMotion": "no-preference",
+  "navigation": {
+    "ok": false,
+    "reason": "navigation-failed; consulte requestsFailed",
+    "elapsedMs": 48.64651099999992
+  },
+  "requestsFailed": [
+    {
+      "url": "https://lusion.co/",
+      "error": "net::ERR_TUNNEL_CONNECTION_FAILED",
+      "elapsedMs": 1027.301768
+    }
+  ],
+  "responses": [],
+  "consoleErrors": [],
+  "consoleCounts": {},
+  "phases": [
+    {
+      "name": "browser-launch",
+      "elapsedMs": 0.5037120000000641
+    },
+    {
+      "name": "navigation",
+      "elapsedMs": 997.495811
+    }
+  ],
+  "action": null,
+  "notes": [
+    "Contexto novo sem cache persistente; sem throttling configurado.",
+    "DOMContentLoaded e condição automatizada de readiness não garantem que a cena esteja visualmente pronta.",
+    "rAF mede intervalos de callbacks; não é tempo de GPU nem FPS de apresentação.",
+    "Som audível, curvas visuais e estado final exigem análise adicional."
+  ],
+  "phase": "navigation",
+  "browser": "156.0.8078.79",
+  "networkSummary": {
+    "requestedHosts": [
+      "lusion.co"
+    ],
+    "failedHosts": [
+      "lusion.co"
+    ],
+    "httpErrorHosts": [],
+    "warning": "Hosts com falha não comprovam bloqueio administrativo; verificar tipo de erro e política antes de pedir liberação."
+  },
+  "endedUTC": "2026-11-12T22:35:57.009Z",
+  "environmentObserved": {
+    "executor": "Codex Cloud Linux x86_64",
+    "windowsUserComputerAccessible": false,
+    "node": "24.22.1",
+    "npm": "11.9.0",
+    "playwright": "1.62.1",
+    "chromium": "156.0.8078.79",
+    "powershellFound": false,
+    "claudeCLIOnPath": false,
+    "reaInitiallyOnPath": false,
+    "visibleMemoryMiB": 34087,
+    "availableDiskApproxGiB": 60,
+    "diskNote": "/workspace e /tmp no mesmo filesystem; não são discos do PC Windows."
+  },
+  "connectivityChecks": {
+    "curl": {
+      "observedUTC": "2026-11-12T22:35:31.619564+00:00",
+      "proxyCONNECTStatus": 403,
+      "exit": 56,
+      "originReached": false
+    },
+    "githubAPI": {
+      "result": "Forbidden",
+      "originOrPolicyDiagnosis": "API inacessível nesta rodada; não diagnosticar token por este erro."
+    },
+    "gitRead": {
+      "ok": true,
+      "researchHEADAtResume": "c5233f4b972f5081df89ba081b8bc0487b2c80b5",
+      "mainHEADAtResume": "8dc42ee01c8f2df5635197cbfddb053cc3949404"
+    }
+  },
+  "configurationObservation": {
+    "draftRevision": 3,
+    "type": "restricted",
+    "customHosts": [
+      "api.github.com",
+      "lusion.co"
+    ],
+    "presetPreserved": "package_managers",
+    "runtimePublicationConfirmed": false,
+    "duplicateDraftSaved": false
+  },
+  "referenceInspected": false,
+  "userPCSpecificationsConfirmed": false
+}

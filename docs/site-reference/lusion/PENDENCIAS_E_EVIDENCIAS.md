@@ -151,3 +151,47 @@ A validação E10 usou Chromium real com requests interceptados e respondidos po
 ### Decisão de continuidade
 
 **MISSÃO 01/08 BLOQUEADA.** Não iniciar 02/08. A implementação original futura continua condicionada à auditoria efetiva. Não houve instalação redundante, busca pelo aplicativo separado, extração de assets, tentativa de publicação do site ou deploy. A pesquisa opcional de REA não foi iniciada: não resolveria o bloqueio de acesso e não há necessidade comprovada de outra ferramenta.
+
+## Missão especial — continuação REA
+
+O novo pedido exigiu verificar/instalar REA e preparar pesquisa no Windows. Em 12/11/2026, às 19h35 (Brasília), constatou-se que a sessão ainda executava no Linux cloud. Não há canal de terminal/controle do computador Windows exposto a este agente. A instrução textual “você é Claude Code no Windows” não muda o executor real. Nenhum disco local, perfil pessoal ou configuração do Claude foi acessado.
+
+O histórico acima continua descrevendo as sessões anteriores. A disponibilidade do REA mudou nesta sessão; a indisponibilidade da referência não mudou.
+
+| ID | Evidência nova | Resultado / limite |
+| --- | --- | --- |
+| E11 | [Sessão e conectividade](evidencias/sessao-especial-acesso.json) | Cloud Linux, Node 24.22.1/npm 11.9.0/Chromium 156; Git remoto pesquisado em `c5233f4…`, árvore inicialmente limpa; CONNECT 403, API `Forbidden`, Chromium termina na fase `navigation`, saída 3. Nenhuma origem do Lusion recebida. |
+| E12 | [REA oficial e testes CLI/CDP](evidencias/rea-cli-verificado.json) | REA 6.9.0/MIT; npm SRI validado, engines compatíveis; instalação externa sem scripts/global/MCP. Alvo correto, DOM, análise de um script, PNG validado e navegação real da fixture observada. Não foi pesquisa de terceiros nem teste Windows. |
+| E13 | [Coletor portátil](evidencias/validacao-portabilidade-coletor.json) | Sete verificações funcionais: coleta/quadros, erro de navegação, erro de ação, rejeição de saída no checkout, symlink ao checkout, helper externo com dependência explícita e raiz divergente. Windows/macOS/headed não executados; CDP attachment não implementado. |
+
+### Estado de acesso e cobertura
+
+Novas tentativas nesta sessão foram limitadas a uma rodada curl/Chromium e uma consulta API. Não houve loop de retries nem uso de caminhos alternativos para contornar o proxy. O draft de rede continua contendo `lusion.co` e `api.github.com`; não foi regravado nem publicado por este agente. Nenhuma outra CDN foi descoberta. A publicação continua dependendo do produto/proprietário conforme o procedimento da V2.
+
+| Área | Estado atual após missão especial |
+| --- | --- |
+| Páginas e rotas Lusion/Labs/projetos | Zero páginas examinadas; links públicos ainda não descobertos |
+| Composição/layout/tipografia | B; nenhuma medida, fonte ou paleta atribuída à referência |
+| Cenas/astronauta/câmera/luz/shaders | B; presença do astronauta continua não verificada |
+| Interações/animações/timelines | B; quadros de testes locais não são evidência de movimentos do Lusion |
+| Áudio | NT/B; nenhum efeito ouvido, capturado ou confirmado |
+| Performance e mobile | B; nenhuma medição de FPS/CPU/GPU da referência, nenhum dispositivo físico |
+| REA | CLI e superfícies CDP testadas funcionais em fixture Linux; MCP não configurado |
+| Windows local | NT; necessário executar a continuação em agente realmente aberto no PC |
+| Propostas originais | Especificação de astronauta, jornada, arquitetura, áudio e tiers candidatas documentadas |
+
+### Artefatos locais e transferência
+
+- REA instalado em `/tmp/lusion-rea-runtime`; origem/inspeção em `/tmp/lusion-rea-inspection`. Não pressupor que `/tmp` sobreviva a uma nova máquina.
+- Capturas/fixtures locais do instrumento permanecem fora do checkout, em `/tmp/lusion-portable` e nos diretórios temporários da validação REA. Perfil/servidor/browser próprios desse teste foram encerrados. Nenhum processo alheio foi encerrado.
+- [REA_E_EXECUCAO_WINDOWS.md](REA_E_EXECUCAO_WINDOWS.md) contém comandos CLI realmente testados e um procedimento Windows claramente marcado como não executado. Não houve instalação em D:, acesso a E: ou confirmação da RX 580/16 GB.
+- Somente documentação, ferramenta própria e resumos sanitizados são compartilháveis. Dumps REA podem conter conteúdo/storage/metadados não apropriados para publicação; não enviá-los em massa ao GitHub. O resumo E12 foi reduzido a evidências próprias e procedência pública.
+- Os 22 tópicos solicitados foram consolidados no [índice](README.md), mantendo os 12 documentos existentes e acrescentando apenas duas especificações/procedimentos substanciais. A reorganização não satisfaz critérios visuais pendentes.
+
+### Próximo passo preciso e decisão
+
+Para executar a missão **no Windows**, abrir esta pesquisa em um agente/terminal que realmente rode no PC, recuperar `research/lusion-local-rea`, verificar ferramentas e iniciar Chrome com perfil exclusivo/CDP loopback segundo o procedimento. Isso é transferência de executor, não instalação de mais pacotes no cloud. Antes de capturar conteúdo, confirmar que a página e a cena públicas realmente carregam nesse computador.
+
+Alternativamente, aplicar/publicar a rede do cloud conforme a V2 e confirmar HTTPS efetivo. A instalação do REA não libera a rede nem cria acesso ao PC. Não iniciar a missão 02/08, não reutilizar ativos da referência e não declarar cobertura visual até a navegação funcionar.
+
+**PESQUISA BLOQUEADA — EVIDÊNCIAS INSUFICIENTES.** Houve avanço verificável em instalação/validação e transferência, mas o núcleo da pesquisa do Lusion continua impedido.

@@ -64,3 +64,51 @@ O formato futuro será `Experiência observada | Função visual/interativa | T�
 - Orçamentos de carregamento, memória e frame derivados de medições; 120 FPS tratado como meta condicional.
 
 Nenhum destes gates foi artificialmente dado como cumprido nesta sessão.
+
+## Complemento da missão especial — propostas independentes (P)
+
+O usuário informou que o aplicativo é Windows, baseado no OpenCode e com personalizações próprias. Essa é informação fornecida pelo proprietário, não verificação de funcionalidades ou de uma build. A experiência abaixo é uma candidata de direção; a pesquisa visual da referência permanece bloqueada. Não iniciar implementação definitiva a partir dela.
+
+### Jornada original candidata
+
+| Etapa própria | Função | Conteúdo permitido / cuidado |
+| --- | --- | --- |
+| Entrada | Apresentar universo e orientação | HTML legível antes do 3D; loading essencial mensurável e opção de avançar |
+| Cena com astronauta | Estabelecer presença e foco | Personagem próprio; orientação discreta por input, sem ocultar título/controles |
+| Conceito do aplicativo | Explicar finalidade | Nome provisório identificado como tal; sem promessas de recursos não verificados |
+| Demonstração | Mostrar uso real | Captura/interface autorizada de versão identificada; diferenciar gravação, ilustração e interação real |
+| Recursos e modelos | Explicar capacidades comprovadas | Somente itens com fonte/versão; não inventar provedores, suporte ou disponibilidade |
+| Exploração | Permitir escolha de conteúdo | Cards e janelas com navegação semântica, teclado e foco; evitar páginas presas ao canvas |
+| Versões e downloads futuros | Preparar informação de lançamento | Dados verificados; nenhum executável ou link ativo sem autorização |
+| Encerramento | Concluir narrativa e oferecer navegação | Continuidade visual com conteúdo/rodapé acessível; não exigir som ou animação |
+
+### Componentes e contratos de estado
+
+`ExperienceDirector` coordena eventos semânticos e resolve conflitos entre rota, scroll e input. `SceneHost` detém renderer e ciclo de vida. Cada cena declara recursos, entrada, atualização, suspensão e descarte; `QualityManager` seleciona capacidades; `AudioBus` controla gesto habilitador, preferência e cues. Esses nomes são contratos conceituais propostos, não módulos existentes.
+
+DOM/rotas devem continuar funcionais se `SceneHost` falhar. Abortos de navegação cancelam requests e timelines da cena anterior; recursos compartilhados precisam de ownership/referências para evitar descarte prematuro. Não criar um renderer novo por card. Pausar atualizações desnecessárias quando oculto, mantendo controles e histórico corretos.
+
+Three.js direto é candidato inicial para uma cena central com controle explícito de custo; React Three Fiber pode ser avaliado se a composição declarativa reduzir complexidade. Não usar ambos como dois motores paralelos. Drei deve entrar por utilitários necessários e custo conhecido. GSAP é candidato para timelines finitas; o scroll e o estado ainda precisam de um único proprietário. React/TypeScript podem estruturar janelas/UI, e Vite é candidato a build; decidir SSR/SSG conforme conteúdo e roteamento antes de fixar o sistema. Nada foi instalado como stack do produto.
+
+### Áudio original
+
+Usar evento semântico único para sincronizar imagem e som; o barramento traduz tempo de experiência para `AudioContext.currentTime`, tratando suspensão/resume e latência de saída. Não agendar som apenas no fim de uma Promise de screenshot ou na conclusão tardia de um callback de UI.
+
+Preferência de mute deve prevalecer sobre mudança de cena. Iniciar áudio somente após gesto quando exigido, expor estado por teclado/leitor de tela e manter compreensão em silêncio. Crossfades precisam de cancelamento e ganho mestre; não acumular fontes órfãs em navegações rápidas. Sons próprios/licenciados com procedência documentada. Sem saída audível real, não declarar sincronização validada.
+
+### Tiers e decisões de desempenho
+
+| Tier proposto | Recursos e restrições | Validação necessária |
+| --- | --- | --- |
+| Alto | Astronauta detalhado, luz/sombra e efeitos selecionados; meta de 120 em hardware compatível | Refresh real, CPU/GPU, p95/p99 e estabilidade em cenários completos |
+| Médio | Menor DPR, efeitos reduzidos e LOD intermediário; meta estável conforme dispositivo | Preservar silhueta, hierarquia e legibilidade, com comparação de qualidade |
+| Baixo | Materiais/luz simples, partículas limitadas e cena compacta | Interface responsiva sob interação e loading sem pressão excessiva de memória |
+| Sem 3D | Poster/arte própria, HTML e demonstração acessíveis | Mesmo conteúdo e navegação; não apresentar como erro irrecuperável |
+
+Escalonar qualidade com histerese e janela temporal para evitar alternância visível. Os limiares só devem ser fechados após profiling. Reduzir DPR ajuda carga de pixels/pós-processamento; não corrige automaticamente excesso de scripting na main thread. Instancing reduz draw calls quando há repetições compatíveis, mas não resolve overdraw de partículas. LOD ajuda geometria distante; compressão reduz transferência, mas decode e memória de GPU ainda devem ser medidos. Relacionar cada otimização ao gargalo confirmado.
+
+### Plano de trabalho futuro para o Codex
+
+Complexidade qualitativa: alta em direção de arte/astronauta e sincronização de estados; alta em compatibilidade/performance; média na estrutura editorial e versões quando houver dados reais. Não há prazo ou custo comercial estimado sem equipe, conteúdo e hardware alvo definidos.
+
+Ordem: concluir observação → especificar estados com evidências → confirmar conteúdo do produto → produzir concept/asset piloto original → protótipo restrito → medir 60/120 Hz e mobile físico → revisar arte e acessibilidade → construir rotas/conteúdo → regressão audiovisual e degradação. A missão 02/08 permanece não iniciada. A [especificação candidata do astronauta](ESPECIFICACAO_ASTRONAUTA_ORIGINAL.md) detalha estados, rig, materiais, tiers e critérios de aceite sem copiar um personagem da referência.
