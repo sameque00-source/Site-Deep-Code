@@ -129,6 +129,9 @@ async function returnToHero() {
 try {
   await page.goto(baseURL, { waitUntil: 'networkidle' });
   await page.waitForFunction(() => window.__deepCodeExperience?.status === 'ready', null, { timeout: 45_000 });
+  const warmStart = Date.now();
+  await page.waitForFunction(() => window.__deepCodeExperience?.state === 'IDLE', null, { timeout: 45_000 });
+  report.warmupUntilIdleMs = Date.now() - warmStart;
   report.environment = await page.evaluate(() => {
     const canvas = document.querySelector('canvas');
     const gl = canvas?.getContext('webgl2');
