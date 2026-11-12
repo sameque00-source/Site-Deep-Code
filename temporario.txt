@@ -1,1 +1,0 @@
-Arquivo temporário para verificar a criação de arquivos no repositório.
