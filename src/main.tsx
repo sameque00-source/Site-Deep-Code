@@ -1,0 +1,10 @@
+import { StrictMode } from 'react';
+import { createRoot, hydrateRoot } from 'react-dom/client';
+import '../src/styles/fonts.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import './styles/site.css';
+import App from './app/App';
+const root = document.getElementById('root')!;
+const app = <StrictMode><App /></StrictMode>;
+if (root.querySelector('main')) hydrateRoot(root, app);
+else createRoot(root).render(app);

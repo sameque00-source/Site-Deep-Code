@@ -1,0 +1,3 @@
+# Ambiente de avaliação. Remover a restrição somente no lançamento aprovado.
+User-agent: *
+Disallow: /
