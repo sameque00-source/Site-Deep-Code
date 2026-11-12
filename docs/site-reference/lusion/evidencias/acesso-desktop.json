@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-12T21:16:10.384Z",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "failures": [
+    {
+      "url": "https://lusion.co/",
+      "error": "net::ERR_TUNNEL_CONNECTION_FAILED"
+    }
+  ],
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://lusion.co/",
+  "browser": "156.0.8078.79"
+}

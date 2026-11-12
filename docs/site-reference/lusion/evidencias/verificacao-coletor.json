@@ -1,0 +1,32 @@
+{
+  "startedUTC": "2026-11-12T21:23:51.433Z",
+  "target": "https://lusion.co/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "profile": "desktop headless",
+  "reducedMotion": "no-preference",
+  "navigation": {
+    "ok": false,
+    "reason": "navigation-failed; consulte requestsFailed",
+    "elapsedMs": 27.88799700000004
+  },
+  "requestsFailed": [
+    {
+      "url": "https://lusion.co/",
+      "error": "net::ERR_TUNNEL_CONNECTION_FAILED"
+    }
+  ],
+  "responses": [],
+  "consoleErrors": [],
+  "action": null,
+  "notes": [
+    "Contexto novo sem cache persistente; sem throttling configurado.",
+    "DOMContentLoaded + espera de 1500 ms não garante que a cena esteja pronta.",
+    "rAF mede intervalos de callbacks; não é tempo de GPU nem FPS de apresentação.",
+    "Som audível, curvas visuais e estado final exigem análise adicional."
+  ],
+  "browser": "156.0.8078.79",
+  "endedUTC": "2026-11-12T21:23:52.193Z"
+}
