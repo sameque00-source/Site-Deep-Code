@@ -39,19 +39,31 @@ async function main() {
   const mobile = process.env.PROFILE === 'mobile';
   const proxyRaw = process.env.HTTPS_PROXY || process.env.https_proxy;
   const p = proxyRaw ? new URL(proxyRaw) : null;
+  const sessionStart = performance.now();
+  const testID = process.env.TEST_ID || 'sem-id';
+  if (!/^[a-zA-Z0-9_-]{1,80}$/.test(testID)) throw new Error('TEST_ID inválido.');
+  const readySelector = process.env.READY_SELECTOR || null;
+  const requestedHosts = new Set();
   const report = {
+    schemaVersion: 2, testID,
     startedUTC: new Date().toISOString(), target: cleanURL(target), viewport,
     profile: mobile ? 'Chromium com emulação mobile/touch' : 'desktop headless',
     reducedMotion: process.env.REDUCED_MOTION === 'reduce' ? 'reduce' : 'no-preference',
     navigation: null, requestsFailed: [], responses: [], consoleErrors: [],
+    consoleCounts: {}, phases: [],
     action: action ? { type: action.type, selector: action.selector || null } : null,
     notes: ['Contexto novo sem cache persistente; sem throttling configurado.',
-      'DOMContentLoaded + espera de 1500 ms não garante que a cena esteja pronta.',
+      'DOMContentLoaded e condição automatizada de readiness não garantem que a cena esteja visualmente pronta.',
       'rAF mede intervalos de callbacks; não é tempo de GPU nem FPS de apresentação.',
       'Som audível, curvas visuais e estado final exigem análise adicional.']
   };
+  const mark = name => {
+    report.phase = name;
+    report.phases.push({ name, elapsedMs: performance.now() - sessionStart });
+  };
   let browser;
   try {
+    mark('browser-launch');
     browser = await chromium.launch({
       executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true,
       args: ['--no-sandbox'],
@@ -70,15 +82,24 @@ async function main() {
       } catch { /* API opcional; o relatório indica suporte. */ }
     });
     const page = await context.newPage();
-    page.on('requestfailed', r => report.requestsFailed.push({ url: cleanURL(r.url()), error: r.failure()?.errorText }));
+    page.on('request', r => {
+      try { const u = new URL(r.url()); if (['https:', 'http:'].includes(u.protocol)) requestedHosts.add(u.hostname); } catch { /* URL não HTTP. */ }
+    });
+    page.on('requestfailed', r => report.requestsFailed.push({ url: cleanURL(r.url()),
+      error: r.failure()?.errorText, elapsedMs: performance.now() - sessionStart }));
     page.on('response', r => report.responses.push({ url: cleanURL(r.url()), status: r.status(),
-      type: r.request().resourceType(), mime: r.headers()['content-type'] || null }));
+      type: r.request().resourceType(), mime: r.headers()['content-type'] || null,
+      elapsedMs: performance.now() - sessionStart }));
+    page.on('console', message => {
+      const type = message.type(); report.consoleCounts[type] = (report.consoleCounts[type] || 0) + 1;
+    });
     // Não exportar mensagens de console de terceiros: podem conter dados pessoais ou credenciais.
     page.on('pageerror', () => report.consoleErrors.push({ kind: 'uncaught-page-error', atUTC: new Date().toISOString() }));
     const cdp = await context.newCDPSession(page);
     await cdp.send('Performance.enable');
     const begin = performance.now();
     let response;
+    mark('navigation');
     try {
       response = await page.goto(target, { waitUntil: 'domcontentloaded', timeout: 30000 });
     } catch {
@@ -90,7 +111,13 @@ async function main() {
     report.navigation = { ok: !!response?.ok(), status: response?.status(),
       finalURL: cleanURL(page.url()), toDOMContentLoadedMs: performance.now() - begin };
     if (!response?.ok()) { process.exitCode = 3; return; }
-    await page.waitForTimeout(1500);
+    mark('readiness');
+    report.readiness = { strategy: readySelector ? 'explicit-visible-selector' : 'fixed-wait-1500ms',
+      selector: readySelector, conditionSatisfied: false, sceneVisuallyVerified: false };
+    if (readySelector) await page.locator(readySelector).waitFor({ state: 'visible', timeout: 30000 });
+    else await page.waitForTimeout(1500);
+    report.readiness.conditionSatisfied = true;
+    mark('inventory');
     report.dom = await page.evaluate(() => {
       const clean = v => { try { const u = new URL(v, location.href); return ['http:', 'https:'].includes(u.protocol) ? u.origin + u.pathname : `[${u.protocol}]`; } catch { return '[inválida]'; } };
       return {
@@ -109,6 +136,7 @@ async function main() {
       };
     });
     await page.screenshot({ path: path.join(out, 'estado-inicial.png') });
+    mark('idle-sample');
     const sampleStart = await page.evaluate(() => performance.now());
     report.raf = await page.evaluate(() => new Promise(resolve => {
       const intervals = []; let last = null; const start = performance.now();
@@ -131,6 +159,7 @@ async function main() {
     report.longTasks = await page.evaluate(start => window.__referenceAuditLongTasks.filter(e => e.start >= start), sampleStart);
     report.cdpMetricsAfterIdle = (await cdp.send('Performance.getMetrics')).metrics;
     if (action) {
+      mark('action');
       const frames = [], before = performance.now();
       const locator = action.selector ? page.locator(action.selector) : null;
       // Offsets começam após o comando de interação; incluem overhead e não representam dispatch exato.
@@ -153,6 +182,7 @@ async function main() {
       report.action.frames = frames;
       report.action.finalURL = cleanURL(page.url());
     }
+    mark('resource-metadata');
     report.resources = await page.evaluate(() => performance.getEntriesByType('resource').map(e => {
       const u = new URL(e.name); return { url: ['http:', 'https:'].includes(u.protocol) ? u.origin + u.pathname : `[${u.protocol}]`,
         initiatorType: e.initiatorType, startTime: e.startTime, duration: e.duration,
@@ -161,11 +191,25 @@ async function main() {
     report.navigationTiming = await page.evaluate(() => performance.getEntriesByType('navigation').map(e => ({
       type: e.type, domContentLoadedEventEnd: e.domContentLoadedEventEnd, loadEventEnd: e.loadEventEnd,
       transferSize: e.transferSize, encodedBodySize: e.encodedBodySize })));
+    mark('collection-complete');
+  } catch (error) {
+    // Não persistir mensagem/stack: erros externos podem carregar URLs ou dados privados.
+    report.collectionError = { phase: report.phase,
+      kind: error?.name === 'TimeoutError' ? 'timeout' : 'collection-failed', detailsOmitted: true };
+    process.exitCode = 4;
   } finally {
+    const host = value => { try { return new URL(value).hostname; } catch { return null; } };
+    report.networkSummary = {
+      requestedHosts: [...requestedHosts].sort(),
+      failedHosts: [...new Set(report.requestsFailed.map(r => host(r.url)).filter(Boolean))].sort(),
+      httpErrorHosts: [...new Set(report.responses.filter(r => r.status >= 400).map(r => host(r.url)).filter(Boolean))].sort(),
+      warning: 'Hosts com falha não comprovam bloqueio administrativo; verificar tipo de erro e política antes de pedir liberação.'
+    };
     report.endedUTC = new Date().toISOString();
     write('relatorio.json', report);
     if (browser) await browser.close();
-    console.log(JSON.stringify({ saved: out, navigationOK: report.navigation?.ok === true }));
+    console.log(JSON.stringify({ saved: out, navigationOK: report.navigation?.ok === true,
+      collectionOK: report.phase === 'collection-complete', phase: report.phase }));
   }
 }
 main().catch(() => { console.error('Falha de coleta. Verifique o relatório local, os parâmetros, Playwright e Chromium.'); process.exitCode = 1; });

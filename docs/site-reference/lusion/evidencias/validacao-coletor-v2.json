@@ -1,0 +1,28 @@
+{
+  "dateUTC": "2026-11-12T21:32:15.499Z",
+  "referenceInspected": false,
+  "tests": [
+    {
+      "test": "success",
+      "scope": "fixture local interceptada pelo Playwright, sem requests externos",
+      "exit": 0,
+      "expected": 0,
+      "passed": true
+    },
+    {
+      "test": "blocked",
+      "scope": "fixture local interceptada pelo Playwright, sem requests externos",
+      "exit": 3,
+      "expected": 3,
+      "passed": true
+    },
+    {
+      "test": "action-error",
+      "scope": "fixture local interceptada pelo Playwright, sem requests externos",
+      "exit": 4,
+      "expected": 4,
+      "passed": true
+    }
+  ],
+  "note": "Não são medições ou conteúdo do Lusion. Fixtures e capturas somente em /tmp/lusion-v2/."
+}
