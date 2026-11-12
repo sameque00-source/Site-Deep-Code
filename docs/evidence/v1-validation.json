@@ -1,0 +1,140 @@
+{
+  "recordedUTC": "2026-11-12T23:34:24.882567+00:00",
+  "implementationCommit": "9448c28",
+  "productionBuild": true,
+  "browser": "Chromium 156.0.8078.79 Linux headless; SwiftShader",
+  "unit": {
+    "passed": 10,
+    "failed": 0,
+    "scope": "Audio lifecycle with mock + adaptive callback policy"
+  },
+  "e2e": {
+    "stats": {
+      "startTime": "2026-11-12T23:30:54.094Z",
+      "duration": 62249.359,
+      "expected": 11,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "name": "produção pré-renderizada preserva conteúdo e navegação sem JavaScript",
+        "status": "passed",
+        "durationMs": 1531
+      },
+      {
+        "name": "falha simulada da API WebGL mantém o conteúdo e encerra o loading",
+        "status": "passed",
+        "durationMs": 1486
+      },
+      {
+        "name": "conteúdo, navegação e downloads continuam úteis sem a camada gráfica",
+        "status": "passed",
+        "durationMs": 4206
+      },
+      {
+        "name": "menu móvel recebe foco, navega por seção e devolve o foco ao fechar",
+        "status": "passed",
+        "durationMs": 1396
+      },
+      {
+        "name": "layout permanece sem overflow em nove tamanhos incluindo retrato e paisagem",
+        "status": "passed",
+        "durationMs": 2285
+      },
+      {
+        "name": "a cena renderiza de verdade, reage ao ponteiro, redimensiona e trata perda de contexto",
+        "status": "passed",
+        "durationMs": 12596
+      },
+      {
+        "name": "preferência de movimento reduzido é respeitada sem remover conteúdo",
+        "status": "passed",
+        "durationMs": 5091
+      },
+      {
+        "name": "som exige escolha explícita e a preferência não inicia áudio após recarga",
+        "status": "passed",
+        "durationMs": 1413
+      },
+      {
+        "name": "pausa e retomada controlam o trabalho da cena sem bloquear o conteúdo",
+        "status": "passed",
+        "durationMs": 13297
+      },
+      {
+        "name": "demonstração conceitual troca perspectivas por clique e teclado e pode reiniciar",
+        "status": "passed",
+        "durationMs": 2314
+      },
+      {
+        "name": "rolagem rápida com saída e reentrada retoma o loop da cena",
+        "status": "passed",
+        "durationMs": 13851
+      }
+    ]
+  },
+  "viewports": [
+    [
+      1920,
+      1080
+    ],
+    [
+      2560,
+      1440
+    ],
+    [
+      1440,
+      900
+    ],
+    [
+      1366,
+      768
+    ],
+    [
+      1024,
+      768
+    ],
+    [
+      768,
+      1024
+    ],
+    [
+      390,
+      844
+    ],
+    [
+      360,
+      800
+    ],
+    [
+      844,
+      390
+    ]
+  ],
+  "checks": {
+    "npmCi": true,
+    "typescript": true,
+    "eslint": true,
+    "buildAndPrerender": true
+  },
+  "limitations": [
+    "WebGL unavailable case explicitly intercepts API; context loss case uses real WEBGL_lose_context extension.",
+    "No Windows physical device, physical GPU, audible sound evaluation or real 90/120Hz presentation verified.",
+    "Prior 8-case run had overflow failures fixed by containing decorative orbital artwork.",
+    "Dev-only smoke after npm ci encountered 504 Outdated Optimize Dep; server restarted, prerender cache separated; production suite passed."
+  ],
+  "finalSmoke": [
+    {
+      "target": "production",
+      "sceneReady": true,
+      "pageErrors": []
+    },
+    {
+      "target": "development-after-cache-restart",
+      "sceneReady": true,
+      "pageErrors": []
+    }
+  ]
+}

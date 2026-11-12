@@ -2,7 +2,7 @@ import { createServer } from 'vite';
 import { renderToString } from 'react-dom/server';
 import { createElement } from 'react';
 import { readFile, writeFile } from 'node:fs/promises';
-const server = await createServer({ server: { middlewareMode: true }, appType: 'custom' });
+const server = await createServer({ cacheDir: 'node_modules/.cache/prerender-vite', server: { middlewareMode: true }, appType: 'custom' });
 try {
   const { default: App } = await server.ssrLoadModule('/src/app/App.tsx');
   const html = await readFile('dist/index.html', 'utf8');
