@@ -31,3 +31,23 @@ test('falha simulada da API WebGL mantém o conteúdo e encerra o loading', asyn
   await page.locator('#downloads').scrollIntoViewIfNeeded();
   await expect(page.locator('#downloads').getByRole('button')).toBeDisabled();
 });
+
+test('toque mobile emulado abre o menu e troca a demonstração sem hover', async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
+  try {
+    const page = await context.newPage();
+    await page.goto(`${baseURL}/?graphics=off`);
+    await page.getByRole('button', { name: 'Abrir menu', exact: true }).tap();
+    const menu = page.getByRole('dialog');
+    await expect(menu).toBeVisible();
+    await menu.locator('a[href="#demonstracao"]').tap();
+    await expect(menu).not.toBeVisible();
+    const logic = page.getByRole('tab', { name: 'Lógica', exact: true });
+    await logic.tap();
+    await expect(logic).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('tabpanel')).toContainText('motion.ts');
+    await page.locator('#faq summary').first().tap();
+    await expect(page.locator('#faq details').first()).toHaveAttribute('open', '');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(391);
+  } finally { await context.close(); }
+});

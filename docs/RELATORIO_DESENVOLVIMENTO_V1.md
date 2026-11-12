@@ -16,7 +16,7 @@ A página contém projeto, possibilidades, demonstração, IA, exploração, dow
 | BLOQUEADO | Logo original e interface/recursos reais do aplicativo não disponibilizados neste executor cloud |
 | PLANEJADO | Asset/rig final, sound design final, validação física, conteúdo comercial confirmado, releases aprovadas e preparação de lançamento |
 
-Dez testes unitários e onze de navegador passaram; dois runs P01–P08 concluíram após corrigir suspensão e instrumento. Os dados em SwiftShader mostram desempenho baixo; **90–120 FPS não atingidos/validados neste ambiente**. Ver [performance](PERFORMANCE.md) e [testes](TESTES_VALIDACAO.md).
+Dez testes unitários e doze de navegador passaram (11 na suíte completa e um caso adicional de touch emulado); dois runs P01–P08 concluíram após corrigir suspensão e instrumento. Os dados em SwiftShader mostram desempenho baixo; **90–120 FPS não atingidos/validados neste ambiente**. Ver [performance](PERFORMANCE.md) e [testes](TESTES_VALIDACAO.md).
 
 ## Arte e identidade
 

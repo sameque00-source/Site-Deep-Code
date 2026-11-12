@@ -136,5 +136,24 @@
       "sceneReady": true,
       "pageErrors": []
     }
-  ]
+  ],
+  "additionalTouchEmulation": {
+    "stats": {
+      "startTime": "2026-11-12T23:40:23.480Z",
+      "duration": 4772.995,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "dpr": 2,
+    "hasTouch": true,
+    "scope": "Chromium mobile emulado; menu, tabs e FAQ HTML sem hover; não é aparelho físico."
+  },
+  "aggregateBrowserPassed": 12,
+  "aggregateBrowserFailed": 0
 }

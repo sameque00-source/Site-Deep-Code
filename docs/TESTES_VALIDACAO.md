@@ -9,7 +9,7 @@ Executados em Linux cloud, Node 24.22.1 e Chromium 156.0.8078.79 headless/SwiftS
 | `npm run lint` | Passou, zero warnings |
 | `npm run test` | 10 testes passaram: 7 áudio, 3 política de qualidade |
 | `npm run build` | Passou, incluindo pré-renderização HTML |
-| Playwright contra build de produção | 11 passaram, zero falhas/skips/flaky na execução final |
+| Playwright contra build de produção | 11 na suíte completa + 1 adicional de touch passaram; zero falhas nas execuções finais |
 | Profiling final P01–P08 | Duas execuções, 16 cenários válidos; limitações de performance registradas |
 
 ## Cobertura real do navegador
@@ -25,6 +25,7 @@ Executados em Linux cloud, Node 24.22.1 e Chromium 156.0.8078.79 headless/SwiftS
 9. Pausa e retomada: contador de frames para/retoma.
 10. Demonstração: abas por clique/setas, foco, painel e reinício.
 11. Scroll rápido: saídas/reentradas e retomada do loop.
+12. Contexto mobile emulado com `hasTouch: true`, DPR 2: tap em menu, navegação, abas e FAQ, sem depender de hover. Caso adicional executado isoladamente após a suíte completa, sem alteração no código da aplicação.
 
 Os testes unitários de áudio usam mocks para controlar promises e descarte; isso é diferente do teste com AudioContext real. O caso de indisponibilidade gráfica intercepta explicitamente a API; o caso de contexto perdido usa a extensão real. Nenhum deles prova desempenho de GPU física.
 
